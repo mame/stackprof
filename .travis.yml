@@ -1,9 +1,22 @@
-sudo: false
-language: ruby
-rvm:
-  - 2.1
-  - 2.2
-  - 2.3
-  - 2.4
-  - 2.5
-  - ruby-head
+sudo: required
+
+services:
+  - docker
+
+language: general
+
+env:
+  matrix:
+    - RUBY_VERSION=2.1
+    - RUBY_VERSION=2.2
+    - RUBY_VERSION=2.3
+    - RUBY_VERSION=2.4
+    - RUBY_VERSION=2.5
+    - RUBY_VERSION=2.6
+    - RUBY_VERSION=ruby-head
+
+before_install:
+- sudo docker build -t stackprof-$RUBY_VERSION --build-arg=RUBY_VERSION=$RUBY_VERSION .
+
+script:
+- sudo docker run --name stackprof-$RUBY_VERSION stackprof-$RUBY_VERSION
